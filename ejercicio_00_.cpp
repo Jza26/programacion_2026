@@ -1,155 +1,79 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 
-#define MAX_ESTUDIANTES 100
-#define MAX_NOMBRE 100
-#define MAX_CODIGO 20
-
-// Estructura de Estudiante
-typedef struct {
-    char nombre[MAX_NOMBRE];
-    char codigo[MAX_CODIGO];
+// Definimos la estructura de forma simple
+struct Estudiante {
+    char nombre[100];
+    char codigo[20];
     int edad;
     float promedio;
-    bool activo;
-} Estudiante;
-
-// --- Métodos para actualizar ---
-
-void actualizarNombre(Estudiante *e, char nuevoNombre[]) {
-    strcpy(e->nombre, nuevoNombre);
-    // Eliminar el salto de línea que deja fgets
-    e->nombre[strcspn(e->nombre, "\n")] = 0;
-}
-
-void actualizarCodigo(Estudiante *e, char nuevoCodigo[]) {
-    strcpy(e->codigo, nuevoCodigo);
-    e->codigo[strcspn(e->codigo, "\n")] = 0;
-}
-
-void actualizarEdad(Estudiante *e, int nuevaEdad) {
-    e->edad = nuevaEdad;
-}
-
-void actualizarPromedio(Estudiante *e, float nuevoPromedio) {
-    if (nuevoPromedio >= 0.0 && nuevoPromedio <= 10.0) {
-        e->promedio = nuevoPromedio;
-    } else {
-        printf("Error: El promedio debe estar entre 0.0 y 10.0\n");
-    }
-}
-
-void actualizarActivo(Estudiante *e, bool nuevoEstado) {
-    e->activo = nuevoEstado;
-}
-
-// --- Métodos de visualización ---
-
-void mostrarNombre(Estudiante e) { printf("Nombre: %s\n", e.nombre); }
-void mostrarCodigo(Estudiante e) { printf("Codigo: %s\n", e.codigo); }
-void mostrarEdad(Estudiante e) { printf("Edad: %d anos\n", e.edad); }
-void mostrarPromedio(Estudiante e) { printf("Promedio: %.2f\n", e.promedio); }
-void mostrarActivo(Estudiante e) { printf("Estado: %s\n", e.activo ? "Activo" : "Inactivo"); }
-
-void mostrarInformacionCompleta(Estudiante e) {
-    printf("\n--- Informacion del Estudiante ---\n");
-    mostrarNombre(e);
-    mostrarCodigo(e);
-    mostrarEdad(e);
-    mostrarPromedio(e);
-    mostrarActivo(e);
-    printf("----------------------------------\n");
-}
-
-// --- Programa Principal ---
+    int activo; // 1 para si, 0 para no
+};
 
 int main() {
-    Estudiante lista[MAX_ESTUDIANTES];
+    struct Estudiante lista[100];
     int cantidadActual = 0;
     int opcion;
 
     do {
-        printf("\n--- SISTEMA DE GESTION ACADEMICA ---\n");
+        printf("\n--- MENU DE ESTUDIANTES ---\n");
         printf("1. Agregar estudiante\n");
-        printf("2. Mostrar un estudiante en especifico (por Codigo)\n");
-        printf("3. Mostrar todos los estudiantes\n");
+        printf("2. Buscar por codigo\n");
+        printf("3. Mostrar todos\n");
         printf("4. Salir\n");
-        printf("Seleccione una opcion: ");
+        printf("Seleccione: ");
         scanf("%d", &opcion);
-        getchar(); // Limpiar el buffer
 
-        switch (opcion) {
-            case 1:
-                if (cantidadActual < MAX_ESTUDIANTES) {
-                    char tempNombre[MAX_NOMBRE], tempCodigo[MAX_CODIGO];
-                    int tempEdad;
-                    float tempPromedio;
-                    int tempActivo;
+        if (opcion == 1) {
+            if (cantidadActual < 100) {
+                printf("Nombre (sin espacios): ");
+                scanf("%s", lista[cantidadActual].nombre);
 
-                    printf("Ingrese nombre completo: ");
-                    fgets(tempNombre, MAX_NOMBRE, stdin);
-                    actualizarNombre(&lista[cantidadActual], tempNombre);
+                printf("Codigo: ");
+                scanf("%s", lista[cantidadActual].codigo);
 
-                    printf("Ingrese codigo: ");
-                    fgets(tempCodigo, MAX_CODIGO, stdin);
-                    actualizarCodigo(&lista[cantidadActual], tempCodigo);
+                printf("Edad: ");
+                scanf("%d", &lista[cantidadActual].edad);
 
-                    printf("Ingrese edad: ");
-                    scanf("%d", &tempEdad);
-                    actualizarEdad(&lista[cantidadActual], tempEdad);
+                printf("Promedio: ");
+                scanf("%f", &lista[cantidadActual].promedio);
 
-                    printf("Ingrese promedio (0.0 - 10.0): ");
-                    scanf("%f", &tempPromedio);
-                    actualizarPromedio(&lista[cantidadActual], tempPromedio);
+                printf("¿Esta activo? (1=Si / 0=No): ");
+                scanf("%d", &lista[cantidadActual].activo);
 
-                    printf("¿Esta activo? (1 para Si, 0 para No): ");
-                    scanf("%d", &tempActivo);
-                    actualizarActivo(&lista[cantidadActual], tempActivo == 1);
-
-                    cantidadActual++;
-                    printf("¡Estudiante agregado con exito!\n");
-                } else {
-                    printf("Error: Limite de estudiantes alcanzado.\n");
-                }
-                break;
-
-            case 2: {
-                char buscarCodigo[MAX_CODIGO];
-                bool encontrado = false;
-                printf("Ingrese el codigo del estudiante a buscar: ");
-                fgets(buscarCodigo, MAX_CODIGO, stdin);
-                buscarCodigo[strcspn(buscarCodigo, "\n")] = 0;
-
-                for (int i = 0; i < cantidadActual; i++) {
-                    if (strcmp(lista[i].codigo, buscarCodigo) == 0) {
-                        mostrarInformacionCompleta(lista[i]);
-                        encontrado = true;
-                        break;
-                    }
-                }
-                if (!encontrado) printf("Estudiante no encontrado.\n");
-                break;
+                cantidadActual++;
+                printf("Estudiante guardado.\n");
+            } else {
+                printf("Lista llena.\n");
             }
+        } 
+        else if (opcion == 2) {
+            char buscar[20];
+            int encontrado = 0;
+            printf("Codigo a buscar: ");
+            scanf("%s", buscar);
 
-            case 3:
-                if (cantidadActual == 0) {
-                    printf("No hay estudiantes registrados.\n");
-                } else {
-                    for (int i = 0; i < cantidadActual; i++) {
-                        mostrarInformacionCompleta(lista[i]);
-                    }
+            for (int i = 0; i < cantidadActual; i++) {
+                if (strcmp(lista[i].codigo, buscar) == 0) {
+                    printf("\nNombre: %s", lista[i].nombre);
+                    printf("\nPromedio: %.2f", lista[i].promedio);
+                    printf("\nEstado: %s\n", lista[i].activo == 1 ? "Activo" : "Inactivo");
+                    encontrado = 1;
                 }
-                break;
-
-            case 4:
-                printf("Saliendo del sistema...\n");
-                break;
-
-            default:
-                printf("Opcion no valida.\n");
+            }
+            if (encontrado == 0) printf("No se encontro.\n");
+        } 
+        else if (opcion == 3) {
+            for (int i = 0; i < cantidadActual; i++) {
+                printf("\n--- Estudiante %d ---", i + 1);
+                printf("\nNombre: %s", lista[i].nombre);
+                printf("\nCodigo: %s", lista[i].codigo);
+                printf("\nPromedio: %.2f\n", lista[i].promedio);
+            }
         }
+
     } while (opcion != 4);
 
+    printf("Fin del programa.\n");
     return 0;
 }
