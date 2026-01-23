@@ -1,79 +1,95 @@
 #include <stdio.h>
 #include <string.h>
 
-// Definimos la estructura de forma simple
+// Definimos los limites
+#define MAX 100
+
+// Estructura simple
 struct Estudiante {
-    char nombre[100];
+    char nombre[50];
     char codigo[20];
     int edad;
     float promedio;
-    int activo; // 1 para si, 0 para no
+    int activo; // Usamos 1 para Si y 0 para No
 };
 
 int main() {
-    struct Estudiante lista[100];
-    int cantidadActual = 0;
-    int opcion;
+    struct Estudiante lista[MAX];
+    int cantidad = 0;
+    int opcion = 0;
 
-    do {
-        printf("\n--- MENU DE ESTUDIANTES ---\n");
+    while (opcion != 4) {
+        // Menu sencillo
+        printf("\n--- MENU ---\n");
         printf("1. Agregar estudiante\n");
         printf("2. Buscar por codigo\n");
         printf("3. Mostrar todos\n");
         printf("4. Salir\n");
-        printf("Seleccione: ");
+        printf("Opcion: ");
         scanf("%d", &opcion);
+        getchar(); // -> LIMPIAR BUFFER después de leer la opción
 
         if (opcion == 1) {
-            if (cantidadActual < 100) {
+            if (cantidad < MAX) {
                 printf("Nombre: ");
-                scanf("%s", lista[cantidadActual].nombre);
+                gets(lista[cantidad].nombre); 
 
                 printf("Codigo: ");
-                scanf("%s", lista[cantidadActual].codigo);
+                scanf("%s", lista[cantidad].codigo);
+                getchar(); // -> LIMPIAR BUFFER después de leer el código corto
 
                 printf("Edad: ");
-                scanf("%d", &lista[cantidadActual].edad);
+                scanf("%d", &lista[cantidad].edad);
+                getchar(); // -> LIMPIAR BUFFER después de leer la edad
 
                 printf("Promedio: ");
-                scanf("%f", &lista[cantidadActual].promedio);
+                scanf("%f", &lista[cantidad].promedio);
+                getchar(); // -> LIMPIAR BUFFER después de leer el promedio
+                
+                // Validacion simple del promedio
+                if (lista[cantidad].promedio < 0 || lista[cantidad].promedio > 10) {
+                    printf("Promedio invalido, se pondra 0.\n");
+                    lista[cantidad].promedio = 0;
+                }
 
-                printf("¿Esta activo? (1=Si / 0=No): ");
-                scanf("%d", &lista[cantidadActual].activo);
+                printf("Activo (1=Si, 0=No): ");
+                scanf("%d", &lista[cantidad].activo);
+                getchar(); // -> LIMPIAR BUFFER después de leer activo
 
-                cantidadActual++;
-                printf("Estudiante guardado.\n");
+                cantidad++;
+                printf("Guardado!\n");
             } else {
                 printf("Lista llena.\n");
             }
         } 
+        
         else if (opcion == 2) {
-            char buscar[20];
+            char buscado[20];
             int encontrado = 0;
             printf("Codigo a buscar: ");
-            scanf("%s", buscar);
+            scanf("%s", buscado);
+            getchar(); // -> LIMPIAR BUFFER después de leer código a buscar
 
-            for (int i = 0; i < cantidadActual; i++) {
-                if (strcmp(lista[i].codigo, buscar) == 0) {
-                    printf("\nNombre: %s", lista[i].nombre);
-                    printf("\nPromedio: %.2f", lista[i].promedio);
-                    printf("\nEstado: %s\n", lista[i].activo == 1 ? "Activo" : "Inactivo");
+            for (int i = 0; i < cantidad; i++) {
+                if (strcmp(lista[i].codigo, buscado) == 0) {
+                    printf("Nombre: %s\n", lista[i].nombre);
+                    printf("Promedio: %.2f\n", lista[i].promedio);
                     encontrado = 1;
                 }
             }
-            if (encontrado == 0) printf("No se encontro.\n");
+            if (encontrado == 0) printf("No existe.\n");
         } 
+        
         else if (opcion == 3) {
-            for (int i = 0; i < cantidadActual; i++) {
-                printf("\n--- Estudiante %d ---", i + 1);
-                printf("\nNombre: %s", lista[i].nombre);
-                printf("\nCodigo: %s", lista[i].codigo);
-                printf("\nPromedio: %.2f\n", lista[i].promedio);
+            for (int i = 0; i < cantidad; i++) {
+                printf("\nEstudiante %d:\n", i + 1);
+                printf("Nombre: %s\n", lista[i].nombre);
+                printf("Codigo: %s\n", lista[i].codigo);
+                printf("Estado: %d\n", lista[i].activo);
             }
         }
+    }
 
-    } while (opcion != 4);
-
-    printf("Fin del programa.\n");
+    printf("Adios!\n");
     return 0;
 }
