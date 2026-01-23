@@ -26,7 +26,7 @@ int main() {
 
         if (opcion == 1) {
             if (cantidadActual < 100) {
-                printf("Nombre (sin espacios): ");
+                printf("Nombre: ");
                 scanf("%s", lista[cantidadActual].nombre);
 
                 printf("Codigo: ");
