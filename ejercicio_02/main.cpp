@@ -1,25 +1,34 @@
 #include <iostream>
-#include "dispositivo.h"
-#include "celular.h"
+#include "empleado_tiempo_completo.h"
 
 int main() {
-    std::cout << "=== TIENDA DE DISPOSITIVOS ===" << std::endl << std::endl;
+    std::cout << "=== Sistema de Gestion de Empleados ===" << std::endl;
+    std::cout << std::endl;
 
-    // 1. Crear un Celular con constructor de parámetros
-    Celular miCelular("Apple", "iPhone 15", "Azul", 999.99, 10);
-    std::cout << "Celular 1 creado:" << std::endl;
-    miCelular.mostrarInformacion();
+    // Empleado (solo clase base)
+    Empleado emp1("Ana Lopez", "EMP-001", 15000.0);
+    std::cout << "Empleado (clase base):" << std::endl;
+    emp1.mostrarInformacion();
+    std::cout << std::endl;
 
-    // 2. Probar herencia de métodos (usar setter de la base en objeto hijo)
-    std::cout << "\nActualizando precio y color..." << std::endl;
-    miCelular.actualizarPrecio(899.99); // Método de la base
-    miCelular.actualizarColor("Negro");  // Método propio
-    miCelular.mostrarInformacion();
+    // Empleado a tiempo completo (constructor por defecto)
+    EmpleadoTiempoCompleto etc1;
+    std::cout << "Empleado tiempo completo (constructor por defecto):" << std::endl;
+    etc1.mostrarInformacion();
+    std::cout << std::endl;
 
-    // 3. Demostrar uso de Getters heredados y propios
-    std::cout << "\nResumen rápido:" << std::endl;
-    std::cout << "Dispositivo: " << miCelular.obtenerMarca() << " " << miCelular.obtenerModelo() << std::endl;
-    std::cout << "Disponible: " << (miCelular.tieneStock() ? "SÍ" : "NO") << std::endl;
+    // Empleado a tiempo completo (constructor con parámetros)
+    EmpleadoTiempoCompleto etc2("Carlos Ruiz", "EMP-002", 20000.0, 40, 2000.0);
+    std::cout << "Empleado tiempo completo (constructor con parámetros):" << std::endl;
+    etc2.mostrarInformacion();
+    std::cout << "Salario total: " << etc2.calcularSalarioTotal() << std::endl;
+    std::cout << std::endl;
+
+    // Actualizar datos y mostrar de nuevo
+    etc2.actualizarBono(3000.0);
+    std::cout << "Despues de actualizar bono:" << std::endl;
+    etc2.mostrarInformacion();
+    std::cout << "Salario total: " << etc2.calcularSalarioTotal() << std::endl;
 
     return 0;
 }
